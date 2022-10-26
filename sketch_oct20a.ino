@@ -5,7 +5,9 @@
 // Servo Stuff
 Servo myservo;
 int pos = 0;
+#define servoPin 9
 
+#define ledPin 7
 
 // Sound Stuff
 
@@ -21,8 +23,8 @@ int melody[] = { // Hedwig's theme fromn the Harry Potter Movies
   // NOTE_D4, 4,
 };
 
+#define buzzerPin 11
 int tempo = 144;
-int buzzer = 11;
 int notes = sizeof(melody) / sizeof(melody[0]) / 2;
 int wholenote = (60000 * 4) / tempo;
 int divider = 0, noteDuration = 0;
@@ -44,9 +46,9 @@ void playSong() {
       noteDuration = (wholenote) / abs(divider);
       noteDuration *= 1.5; // increases the duration in half for dotted notes
     }
-    tone(buzzer, melody[thisNote], noteDuration*0.9);
+    tone(buzzerPin, melody[thisNote], noteDuration*0.9);
     delay(noteDuration);
-    noTone(buzzer);
+    noTone(buzzerPin);
   }
 }
 
@@ -75,13 +77,15 @@ void checkDistance() {
 void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
   pinMode(echoPin, INPUT); // Sets the echoPin as an INPUT
-  myservo.attach(9);
+  myservo.attach(servoPin);
 }
 
 void loop() {
   checkDistance();
   if (distance < 50) {
+    digitalWrite(ledPin, HIGH);
     playSong();
     sweepServo();
+    digitalWrite(ledPin, LOW);
   }
 }
